@@ -1,0 +1,25 @@
+---
+title: "concordance_vignette"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{concordance_vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+# Using concordance
+
+*concordance* is a comprehensive package including study design for your microbiome data analysis study, and a concordance measurement method to evaluate the concordance between the same datasets from different sequencing platforms (16S rRNA and shotgun data).
+
+If you want to design a new study to explore the relationship between microbiome and human disease, *concordance* package provide power calculation methods for specific sample size range and 
+```{r setup}
+library(concordance)
+```
