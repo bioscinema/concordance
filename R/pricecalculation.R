@@ -111,12 +111,12 @@ priceCalculation <- function(target_power = 0.8,
                              epsilon = NULL) {
 
   # If continuous confounders or error vectors are not provided, generate random ones with length equal to lower_bound.
-  if (is.null(cont.conf)) {
-    cont.conf <- rnorm(lower_bound)
-  }
-  if (is.null(epsilon)) {
-    epsilon <- rnorm(lower_bound)
-  }
+  # if (is.null(cont.conf)) {
+  #   cont.conf <- rnorm(lower_bound)
+  # }
+  # if (is.null(epsilon)) {
+  #   epsilon <- rnorm(lower_bound)
+  # }
 
   # Run simulation for 16S (amplicon) method
   result16s <- sampleCalculationRange(lower_bound = lower_bound,
@@ -145,8 +145,8 @@ priceCalculation <- function(target_power = 0.8,
                                       depth.mu = depth.mu,
                                       depth.theta = depth.theta,
                                       depth.conf.factor = depth.conf.factor,
-                                      cont.conf = cont.conf,
-                                      epsilon = epsilon)
+                                      cont.conf = NULL,
+                                      epsilon = NULL)
 
   df16s <- result16s$data
 
@@ -181,16 +181,20 @@ priceCalculation <- function(target_power = 0.8,
                                       depth.mu = depth.mu,
                                       depth.theta = depth.theta,
                                       depth.conf.factor = depth.conf.factor,
-                                      cont.conf = cont.conf,
-                                      epsilon = epsilon)
+                                      cont.conf = NULL,
+                                      epsilon = NULL)
 
   dfWGS <- resultWGS$data
 
   required_size_wgs <- min(dfWGS$sample_size[dfWGS$mean_power >= target_power], na.rm = TRUE)
   total_cost_wgs <- required_size_wgs * costWGS
 
-  return(list(required_sample_size_16s = required_size_16s,
-              total_cost_16s = total_cost_16s,
-              required_sample_size_wgs = required_size_wgs,
-              total_cost_wgs = total_cost_wgs))
+  # Create a data frame to return the results
+  result_df <- data.frame(
+    platform = c("16S", "WGS"),
+    sample_size_needed = c(required_size_16s, required_size_wgs),
+    price = c(total_cost_16s, total_cost_wgs)
+  )
+
+  return(result_df)
 }

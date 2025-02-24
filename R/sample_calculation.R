@@ -81,6 +81,7 @@ sampleCalculationRange <- function(lower_bound, upper_bound, step = 5,
 
   # For each sample size, call powerCalculation and extract the overall power.
   mean_powers <- sapply(sample_sizes, function(n) {
+    # print(n)
     # Generate new confounder and error vectors if not provided.
     if (is.null(cont.conf)) {
       cont_conf_vec <- rnorm(n)
