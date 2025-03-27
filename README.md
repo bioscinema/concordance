@@ -1,8 +1,8 @@
-# Using concordance
+# CoMPaSS: A Computational Pipeline for Cross-Platform Concordance Assessment and Navigating Study Design in Microbiome Research]{CoMPaSS: A Computational Pipeline for Cross-Platform Concordance Assessment and Navigating Study Design in Microbiome Research
 
-*concordance* is a comprehensive package including study design for your microbiome data analysis study, and a concordance measurement method to evaluate the concordance between the same datasets from different sequencing platforms (16S rRNA and shotgun data).
+*CoMPaSS* is a comprehensive package including study design for your microbiome data analysis study, and a concordance measurement method to evaluate the concordance between the same datasets from different sequencing platforms (16S rRNA and shotgun data).
 
-If you want to design a new study to explore the relationship between microbiome and human disease, *concordance* package provide power calculation methods for specific sample size range and it can help researcher calculate potential cost for different sequencing paltforms with expected power.
+If you want to design a new study to explore the relationship between microbiome and human disease, *CoMPaSS* package provide power calculation methods for specific sample size range and it can help researcher calculate potential cost for different sequencing paltforms with expected power.
 
 ## Table of Contents
 
@@ -20,7 +20,7 @@ If you want to design a new study to explore the relationship between microbiome
 
 ## Installation
 
-You can install **concordance** R package by:
+You can install **CoMPaSS** R package by:
 
 ```{r}
 # # Install devtools if you haven't already
@@ -31,7 +31,7 @@ You can install **concordance** R package by:
 # install_github("bioscinema/concordance")
 # 
 # # Load your package
-# library(concordance)
+# library(CoMPaSS)
 ```
 
 ## Dependent packages
