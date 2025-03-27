@@ -16,9 +16,9 @@ If you want to design a new study to explore the relationship between microbiome
     -   [concordance_overall()](#concordance-overall)
     -   [concordance_split()](#concordance_split)
 
-## Citation {#citation}
+## Citation
 
-## Installation {#installation}
+## Installation
 
 You can install **concordance** R package by:
 
@@ -34,7 +34,7 @@ You can install **concordance** R package by:
 # library(concordance)
 ```
 
-## Dependent packages {#dependencies}
+## Dependent packages 
 
 ```{r}
 library(knitr)
@@ -56,9 +56,9 @@ kable(dependencies, caption = "Dependencies for the Concordance Package")
 
 ```
 
-## Function details {#function-details}
+## Function details
 
-### sampleCalculationRange() {#sample-calculation}
+### sampleCalculationRange() 
 
 ```{r sampleCalculationRange sample,echo=TRUE, eval=FALSE}
 library(concordance)
@@ -81,7 +81,7 @@ print(result$plot)
 
 ```
 
-### powerCalculation (#power-calculation)
+### powerCalculation
 
 ```{r}
 # Load the package containing powerCalculation (adjust if needed)
@@ -108,7 +108,7 @@ print(result$overall_power)
 print(result$replicate_power)
 ```
 
-### priceCalculation (#power-calculation)
+### priceCalculation
 
 ```{r}
 library(concordance)
@@ -128,12 +128,12 @@ print(price_estimates)
 ```
 
 
-### concordance_overall()  {#concordance-overall}
+### concordance_overall()
 ```{r}
 result <- concordance_overall(phy)
 ```
 
-### concordance_split() {#concordance-split}
+### concordance_split()
 ```{r}
 result <- concordance_split(phy1,phy2)
 ```
