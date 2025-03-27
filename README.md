@@ -1,4 +1,4 @@
-# CoMPaSS: A Computational Pipeline for Cross-Platform Concordance Assessment and Navigating Study Design in Microbiome Research]{CoMPaSS: A Computational Pipeline for Cross-Platform Concordance Assessment and Navigating Study Design in Microbiome Research
+# CoMPaSS: A Computational Pipeline for Cross-Platform Concordance Assessment and Navigating Study Design in Microbiome Research
 
 *CoMPaSS* is a comprehensive package including study design for your microbiome data analysis study, and a concordance measurement method to evaluate the concordance between the same datasets from different sequencing platforms (16S rRNA and shotgun data).
 
