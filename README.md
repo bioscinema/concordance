@@ -34,7 +34,7 @@ You can install **concordance** R package by:
 # library(concordance)
 ```
 
-## Dependent packages 
+## Dependent packages
 
 ```{r}
 library(knitr)
@@ -58,7 +58,7 @@ kable(dependencies, caption = "Dependencies for the Concordance Package")
 
 ## Function details
 
-### sampleCalculationRange() 
+### sampleCalculationRange()
 
 ```{r sampleCalculationRange sample,echo=TRUE, eval=FALSE}
 library(concordance)
