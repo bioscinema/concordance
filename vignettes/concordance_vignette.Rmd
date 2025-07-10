@@ -75,7 +75,7 @@ kable(dependencies, caption = "Dependencies for the Concordance Package")
 ## Function details {#function-details}
 
 ### sampleCalculationRange() {#sample-calculation}
-
+(add optional step: estPara())
 ```{r sampleCalculationRange sample,echo=TRUE, eval=FALSE}
 library(concordance)
 
@@ -84,7 +84,7 @@ library(concordance)
 result <- sampleCalculationRange(
   lower_bound = 50,
   upper_bound = 200,
-  data.type = "gut",
+  data.type = "gut", (data=custom)
   method = "amp",
   nSim = 100,       # Number of simulation replicates
   nOTU = 300,       # Number of OTUs to simulate
@@ -143,14 +143,14 @@ print(price_estimates)
 
 ```
 
+### concordance_overall() {#concordance-overall}
 
-### concordance_overall()  {#concordance-overall}
 ```{r}
 result <- concordance_overall(phy)
 ```
 
 ### concordance_split() {#concordance-split}
+
 ```{r}
 result <- concordance_split(phy1,phy2)
 ```
-

@@ -11,6 +11,7 @@ priceCalculation(
   step = 5,
   cost16s = 100,
   costWGS = 500,
+  data.type = "gut",
   nSim = 100,
   alpha = 0.05,
   nOTU = 500,
@@ -48,6 +49,8 @@ priceCalculation(
 \item{cost16s}{Numeric. The estimated cost per sample for 16S sequencing. Default is 100.}
 
 \item{costWGS}{Numeric. The estimated cost per sample for WGS sequencing. Default is 500.}
+
+\item{data.type}{Character. The type of data to simulate (e.g., "gut", "oral", "infant"). Default is "gut".}
 
 \item{nSim}{Numeric. Number of simulations to run per sample size. Default is 100.}
 
@@ -117,6 +120,7 @@ price_estimates <- priceCalculation(target_power = 0.8,
                                     step = 5,
                                     cost16s = 100,
                                     costWGS = 500,
+                                    data.type = "gut",
                                     nSim = 100,
                                     alpha = 0.05,
                                     nOTU = 500,

@@ -5,8 +5,9 @@
 \title{Power Calculation Using Bray–Curtis PERMANOVA for Microbiome Data Simulation}
 \usage{
 powerCalculation(
-  data.type = c("gut", "oral", "infant"),
-  method = c("amp", "wgs"),
+  data.type = c("gut", "oral", "infant", "custom"),
+  method = c("amp", "wgs", "custom"),
+  test_method = c("shannon", "invsimpson", "bray"),
   nSim = 100,
   alpha = 0.05,
   nSam = 100,
@@ -29,8 +30,9 @@ powerCalculation(
   depth.mu = 10000,
   depth.theta = 5,
   depth.conf.factor = 0,
-  cont.conf = rnorm(nSam),
-  epsilon = rnorm(nSam)
+  cont.conf,
+  epsilon,
+  para.custom = NULL
 )
 }
 \arguments{

@@ -289,5 +289,69 @@ ALL_Concordance <- function(physeq) {
   return(out_df)
 }
 
+#' Global_Test: Perform Global Statistical Testing on Simulated Microbiome Data
+#'
+#' This function takes a simulated dataset (a list containing an OTU table and a covariate vector)
+#' and performs one of three statistical tests to compare groups: a Wilcoxon test on Shannon diversity,
+#' a Wilcoxon test on Inverse Simpson diversity, or a PERMANOVA test on Bray–Curtis distances.
+#'
+#' @param sim.dat A list containing simulated data. It must include:
+#'   \describe{
+#'     \item{otu.tab.sim}{A matrix or data frame of OTU counts (OTUs as rows, samples as columns).}
+#'     \item{covariate}{A vector of group labels (e.g., "0" and "1") for each sample.}
+#'   }
+#' @param test_method A character string indicating which test to perform.
+#'   Must be one of \code{"shannon"}, \code{"invsimpson"}, or \code{"braycurtis"}.
+#'   \describe{
+#'     \item{\code{"shannon"}}{Calculates Shannon diversity for each sample and compares groups using a Wilcoxon test.}
+#'     \item{\code{"invsimpson"}}{Calculates Inverse Simpson diversity for each sample and compares groups using a Wilcoxon test.}
+#'     \item{\code{"braycurtis"}}{Calculates Bray–Curtis distances and performs PERMANOVA using \code{adonis2}.}
+#'   }
+#'
+#' @return A numeric p-value from the selected statistical test.
+#'
+#' @details The function first transposes the OTU table so that rows represent samples and then calculates
+#' either diversity indices or a distance matrix. Depending on the \code{test_method} chosen, it then performs either:
+#' a Wilcoxon test (for diversity indices) or a PERMANOVA test (for Bray–Curtis distances) to compare groups.
+#'
+#'
+#' @importFrom vegan diversity vegdist adonis2
+#' @export
+Global_Test <- function(sim.dat, test_method = c("shannon", "invsimpson", "braycurtis")) {
+  test_method <- match.arg(test_method)
 
+  # Transpose OTU table so that rows are samples and columns are OTUs
+  OTU <- t(sim.dat$otu.tab.sim)
+  Group <- as.factor(sim.dat$covariate)
+
+  # Create a data frame containing the OTU data and group labels
+  data <- data.frame(OTU, Group = Group)
+
+  if (test_method == "shannon") {
+    # Calculate Shannon diversity and perform Wilcoxon test
+    data$shannon <- vegan::diversity(OTU, index = "shannon")
+    shannon_groups <- split(data$shannon, data$Group)
+    if (length(shannon_groups) >= 2) {
+      p_value <- wilcox.test(shannon_groups[[1]], shannon_groups[[2]], alternative = "two.sided")$p.value
+    } else {
+      p_value <- NA
+    }
+  } else if (test_method == "invsimpson") {
+    # Calculate Inverse Simpson diversity and perform Wilcoxon test
+    data$invsimpson <- vegan::diversity(OTU, index = "invsimpson")
+    invsimpson_groups <- split(data$invsimpson, data$Group)
+    if (length(invsimpson_groups) >= 2) {
+      p_value <- wilcox.test(invsimpson_groups[[1]], invsimpson_groups[[2]], alternative = "two.sided")$p.value
+    } else {
+      p_value <- NA
+    }
+  } else if (test_method == "braycurtis") {
+    # Calculate Bray-Curtis distances and perform PERMANOVA
+    bc_dist <- vegdist(OTU, method = "bray")
+    permanova_result <- adonis2(bc_dist ~ Group, permutations = 999, data = data)
+    p_value <- permanova_result$`Pr(>F)`[1]
+  }
+
+  return(p_value)
+}
 

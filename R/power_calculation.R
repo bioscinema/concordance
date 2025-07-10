@@ -80,8 +80,9 @@
 #' @importFrom vegan adonis2 vegdist
 #' @importFrom stats rnorm
 #' @export
-powerCalculation <- function(data.type = c("gut", "oral", "infant"),
-                             method = c("amp", "wgs"),
+powerCalculation <- function(data.type = c("gut", "oral", "infant", "custom"),
+                             method = c("amp", "wgs", "custom"),
+                             test_method = c("shannon", "invsimpson", "bray"),
                              nSim = 100,
                              alpha = 0.05,
                              nSam = 100,
@@ -105,55 +106,68 @@ powerCalculation <- function(data.type = c("gut", "oral", "infant"),
                              depth.theta = 5,
                              depth.conf.factor = 0,
                              cont.conf,
-                             epsilon) {
+                             epsilon,
+                             para.custom = NULL) {
 
-  ## Match the choices for data type and method.
   data.type <- match.arg(data.type)
-  method <- match.arg(method)
+  method    <- match.arg(method)
+  test_method <- match.arg(test_method)
 
-  ## Generate cont.conf and epsilon if they were not provided.
-  if(missing(cont.conf)) {
-    cont.conf <- rnorm(nSam)
+  # Generate cont.conf and epsilon if missing
+  if (missing(cont.conf)) cont.conf <- rnorm(nSam)
+  if (missing(epsilon))  epsilon  <- rnorm(nSam)
+
+  # Load EstPara parameters
+  if (data.type != "custom") {
+    fname <- file.path(system.file("extdata", package = "concordance"),
+                       paste0(data.type, "_", method, "_para.RData"))
+    if (!file.exists(fname)) {
+      stop("Parameter file not found: ", fname)
+    }
+    load(fname)  # loads object like gut_amp_para
+    EstPara <- get(paste0(data.type, "_", method, "_para"))
+  } else {
+    if (is.null(para.custom) || !is.list(para.custom)) {
+      stop("For data.type = 'custom', supply para.custom list")
+    }
+    EstPara <- para.custom
   }
-  if(missing(epsilon)) {
-    epsilon <- rnorm(nSam)
-  }
 
-  ## [Rest of your function code follows...]
-  ## For example, load parameters, run simulations, and compute overall power.
-
-  # Placeholder for simulation code:
   replicate_power <- numeric(nSim)
-  for (i in 1:nSim) {
-    # Example: Run your simulation (this is pseudo-code)
-    sim <- SimulateMSeqU(para = EstPara, nSam = nSam, nOTU = nOTU,
-                         diff.otu.pct = diff.otu.pct,
-                         diff.otu.direct = diff.otu.direct,
-                         diff.otu.mode = diff.otu.mode,
-                         user_specified_otu = user_specified_otu,
-                         covariate.type = covariate.type,
-                         grp.ratio = grp.ratio,
-                         covariate.eff.mean = covariate.eff.mean,
-                         covariate.eff.sd = covariate.eff.sd,
-                         confounder.type = confounder.type,
-                         conf.cov.cor = conf.cov.cor,
-                         conf.diff.otu.pct = conf.diff.otu.pct,
-                         conf.nondiff.otu.pct = conf.nondiff.otu.pct,
-                         confounder.eff.mean = confounder.eff.mean,
-                         confounder.eff.sd = confounder.eff.sd,
-                         error.sd = error.sd,
-                         depth.mu = depth.mu,
-                         depth.theta = depth.theta,
-                         depth.conf.factor = depth.conf.factor,
-                         cont.conf = cont.conf,
-                         epsilon = epsilon)
-    # Assume sim produces an object with a p-value for the Group effect.
-    Bray_Curtis_P <- 0.04  # Dummy value for demonstration
-    replicate_power[i] <- ifelse(Bray_Curtis_P < alpha, 1, 0)
+  for (i in seq_len(nSim)) {
+    sim <- SimulateMSeqU(
+      para               = EstPara,
+      nSam               = nSam,
+      nOTU               = nOTU,
+      diff.otu.pct       = diff.otu.pct,
+      diff.otu.direct    = diff.otu.direct,
+      diff.otu.mode      = diff.otu.mode,
+      user_specified_otu = user_specified_otu,
+      covariate.type     = covariate.type,
+      grp.ratio          = grp.ratio,
+      covariate.eff.mean = covariate.eff.mean,
+      covariate.eff.sd   = covariate.eff.sd,
+      confounder.type    = confounder.type,
+      conf.cov.cor       = conf.cov.cor,
+      conf.diff.otu.pct  = conf.diff.otu.pct,
+      conf.nondiff.otu.pct = conf.nondiff.otu.pct,
+      confounder.eff.mean = confounder.eff.mean,
+      confounder.eff.sd    = confounder.eff.sd,
+      error.sd         = error.sd,
+      depth.mu         = depth.mu,
+      depth.theta      = depth.theta,
+      depth.conf.factor = depth.conf.factor,
+      cont.conf        = cont.conf,
+      epsilon          = epsilon
+    )
+
+    p_val <- Global_Test(sim.dat = sim, test_method = test_method)
+    replicate_power[i] <- as.integer(p_val < alpha)
   }
 
-  overall_power <- mean(replicate_power)
-
-  return(list(overall_power = overall_power, replicate_power = replicate_power))
+  list(
+    overall_power   = mean(replicate_power),
+    replicate_power = replicate_power
+  )
 }
 
