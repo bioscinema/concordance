@@ -10,6 +10,7 @@ If you want to design a new study to explore the relationship between microbiome
 -   [Installation](#installation)
 -   [Dependent packages](#dependencies)
 -   [Function Details](#function-details)
+    -   [SimulateMSeq()](#SimulateMSeq)
     -   [sampleCalculationRange()](#sample-calculation)
     -   [powerCalculation()](#power-calculation)
     -   [priceCalculation()](#price-calculation)
@@ -57,6 +58,47 @@ kable(dependencies, caption = "Dependencies for the Concordance Package")
 ```
 
 ## Function details
+
+### SimulateMSeq
+
+The ComPaSS package ships with pre-configured simulation parameters so you can quickly generate example datasets. If you’d like to simulate using your own feature table, follow these steps below. **Note:** estimating parameters on very large OTU tables can be time-consuming.
+
+```r
+## First estimate parameters for our simulation (you can save the parameter as RData to do more simuation in the future)
+para <- EstPara(myotu)  ##myotu is your otu table in data frame format
+
+## Simulate according to your estimated parameters
+N = 206 #sample size
+input.conf <- rnorm(N)
+input.err <- rnorm(N)
+input.diff.otu.pct = NULL
+input.diff.otu.mode = "user_specified"
+user_specified_otu = common_genus[1:10]
+input.covariate.eff.mean = 0.3
+
+nSim = 200
+
+## WGS simulation
+sim_WGS_Genus <- replicate(nSim, list(), simplify = FALSE)
+
+for (i in 1:nSim) {
+  sim_WGS_Genus[[i]] <- SimulateMSeqU(
+    para = para, nSam = N, nOTU = nrow(myotu),
+    # True signal setting
+    diff.otu.pct = input.diff.otu.pct, diff.otu.direct = c("unbalanced"), 
+    diff.otu.mode = input.diff.otu.mode,
+    user_specified_otu = user_specified_otu ,
+    covariate.type = "binary", grp.ratio = 1,
+    covariate.eff.mean = input.covariate.eff.mean, covariate.eff.sd = 0,
+    # Confounder signal setting
+    confounder.type = "none", conf.cov.cor = 0.6,
+    conf.diff.otu.pct = 0, conf.nondiff.otu.pct = 0,
+    confounder.eff.mean = 0, confounder.eff.sd = 0,
+    # Depth setting
+    depth.mu = 10000, depth.theta = 5, depth.conf.factor = 0,
+    cont.conf = input.conf,epsilon = input.err)
+}
+```
 
 ### sampleCalculationRange()
 
